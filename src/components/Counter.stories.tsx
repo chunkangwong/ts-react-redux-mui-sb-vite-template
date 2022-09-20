@@ -8,26 +8,22 @@ export default {
   component: Counter,
   decorators: [
     (story) => (
-      <>
-        <span data-begin-source />
-        {story()}
-        <span data-end-source />
-      </>
-    ),
-    (story) => (
       <Provider store={store}>
-        <div style={{ padding: "1rem" }}>{story()}</div>
+        <div style={{ padding: "1rem" }}>
+          <br story-start />
+          {story()}
+          <br story-end />
+        </div>
       </Provider>
     ),
   ],
   parameters: {
     docs: {
       transformSource: (source: string) => {
-        const [, output] =
-          source.match(
-            /<span data-begin-source \/>([\s\S]*?)<span data-end-source \/>/
-          ) ?? [];
-        return output;
+        const regexRes = source.match(
+          /<br story-start \/>([\s\S]*?)<br story-end \/>/
+        );
+        return regexRes ? regexRes[1] : source;
       },
     },
   },
